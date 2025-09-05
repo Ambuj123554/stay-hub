@@ -12,10 +12,6 @@
 1. [Features](#-features)  
 2. [Tech Stack](#-tech-stack)  
 3. [Live Demo](#-live-demo)  
-4. [Installation & Setup](#-installation--setup)  
-5. [Screenshots](#-screenshots)  
-6. [Project Structure](#-project-structure)  
-7. [Author](#-author)  
 
 ---
 
