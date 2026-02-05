@@ -1,7 +1,7 @@
 # 🏨 Stay Hub
 
 [![GitHub Repo](https://img.shields.io/badge/Repo-GitHub-lightgray?logo=github)](https://github.com/Ambuj123554/stay-hub)  
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?logo=vercel)](https://stay-hub3.onrender.com/listing/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?logo=vercel)](https://[stay-hub3.onrender.com/listing/](https://stay-hub-3.onrender.com/listing))
 
 **Stay Hub** is a modern **room booking and accommodation management platform**. Users can browse, search, and book stays, while admins manage listings and bookings. The app is **responsive** and styled with **Bootstrap** for a clean, modern look.
 
