@@ -4,8 +4,7 @@ const Listing=require("../models/listing.js");
 const wrapAsync=require("../utils/wrapAsync.js");
 const ExpressError=require("../utils/ExpressError.js");
 const {listingSchema,reviewSchema}=require("../schema.js");  
-const isloggedIn=require("../middleware.js");
-const isOwner=require("../middleware.js"); 
+const {isloggedIn, canManageListings, isOwner}=require("../middleware.js");
 const user=require("../routes/user.js");
 const listinguser=require("../controllers/listing.js");
 const multer=require('multer');
@@ -28,7 +27,7 @@ const listingValidate=((req,res,next)=>{
 // router.get("/",wrapAsync(listinguser.index));
 
 //new route
-router.get("/new",isloggedIn,(req,res)=>{
+router.get("/new",isloggedIn,canManageListings,(req,res)=>{
     
     res.render("new.ejs");
 })
@@ -36,7 +35,7 @@ router.get("/new",isloggedIn,(req,res)=>{
 router.route("/")
 .get(wrapAsync(listinguser.index))
 // .post(isloggedIn,listingValidate,wrapAsync(listinguser.new))
-.post(isloggedIn,
+.post(isloggedIn,canManageListings,
   upload.single("listing[image]"),
   listingValidate,
   wrapAsync(listinguser.new)
@@ -50,13 +49,13 @@ router.route("/")
 
 
 //edit and update
-router.get("/:id/edit",isloggedIn,listingValidate,wrapAsync(listinguser.edit));
+router.get("/:id/edit",isloggedIn,isOwner,wrapAsync(listinguser.edit));
 
 
 router.route("/:id")
 .get(wrapAsync(listinguser.show))
-.put(isloggedIn,upload.single("listing[image]"),wrapAsync(listinguser.update))
-.delete(isloggedIn,wrapAsync(listinguser.delete))
+.put(isloggedIn,isOwner,upload.single("listing[image]"),wrapAsync(listinguser.update))
+.delete(isloggedIn,isOwner,wrapAsync(listinguser.delete))
 
 
 

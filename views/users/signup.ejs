@@ -22,6 +22,17 @@
                     <div class="valid-feedback">Looks good!</div>
                     <div class="invalid-feedback">password should be valid</div>
             </div>
+            <div class="mb-4">
+                    <label for="accountType" class="form-label">Account Type</label>
+                    <select name="accountType" id="accountType" class="form-control" required>
+                        <option value="">Select Account Type</option>
+                        <option value="Customer">Customer</option>
+                        <option value="Owner">Owner</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Please select an account type</div>
+            </div>
             <button class="btn btn-success mb-5">SignUp</button>
         </form>
     </div>

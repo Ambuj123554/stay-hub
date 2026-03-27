@@ -39,12 +39,24 @@
           </form>
         </div>
         <div class="navbar-nav ms-auto">
-          <a class="nav-link" href="/listing/new">Airbnb your home</a>
+          <%if(currUser){%>
+            <%if(currUser.accountType === 'Owner' || currUser.accountType === 'Admin'){%>
+              <a class="nav-link" href="/listing/new">Add your property</a>
+            <%}%>
+            <%if(currUser.accountType === 'Admin'){%>
+              <a class="nav-link" href="/booking/admin/dashboard">Admin Dashboard</a>
+            <%}%>
+          <%} else {%>
+            <a class="nav-link" href="/listing/new">List your property</a>
+          <%}%>
           <%if(!currUser){%>
             <a class="nav-link"href="/signup"><b>Sign up</b></a>
             <a class="nav-link" href="/login"><b>Log in</b></a>
           <%}%>
           <%if(currUser){%>
+            <span class="navbar-text me-3">
+              <small>Welcome, <strong><%=currUser.username%></strong> (<%=currUser.accountType%>)</small>
+            </span>
             <a class="nav-link" href="/logout"><b>Log out</b></a>
           <%}%>
           

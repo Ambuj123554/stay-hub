@@ -1,0 +1,61 @@
+<%layout("/layouts/boilerplate")%>
+<h1 class="col-6 offset-2 text-success">Booking Confirmed!</h1>
+<br>
+
+<div class="row mt-3">
+    <div class="col-8 offset-2">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4>Booking Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Property Details</h6>
+                        <p><strong>Property:</strong> <%=booking.listing.title%></p>
+                        <p><strong>Location:</strong> <%=booking.listing.location%>, <%=booking.listing.country%></p>
+                        <p><strong>Owner:</strong> <%=booking.listing.owner.username%></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Booking Information</h6>
+                        <p><strong>Booking ID:</strong> <%=booking._id%></p>
+                        <p><strong>Customer:</strong> <%=booking.customerName%></p>
+                        <p><strong>Booking Date:</strong> <%=booking.bookingDate.toLocaleDateString("en-IN")%></p>
+                        <p><strong>Status:</strong> <span class="badge bg-success"><%=booking.status%></span></p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Stay Details</h6>
+                        <p><strong>Check-in:</strong> <%=booking.checkInDate.toLocaleDateString("en-IN")%></p>
+                        <p><strong>Check-out:</strong> <%=booking.checkOutDate.toLocaleDateString("en-IN")%></p>
+                        <p><strong>Duration:</strong> <%=booking.numberOfDays%> days</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Room Details</h6>
+                        <p><strong>Number of Rooms:</strong> <%=booking.numberOfRooms%></p>
+                        <p><strong>Room Type:</strong> <%=booking.roomType%></p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="text-center">
+                            <strong>Total Amount: &#8377;<%=booking.totalAmount.toLocaleString("en-IN")%></strong>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <a href="/listing" class="btn btn-primary">Browse More Properties</a>
+            <a href="/booking/bill/<%=booking._id%>" class="btn btn-success">Download Bill</a>
+        </div>
+    </div>
+</div>

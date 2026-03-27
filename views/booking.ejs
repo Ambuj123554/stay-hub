@@ -1,0 +1,143 @@
+<%layout("/layouts/boilerplate")%>
+<h1 class="col-6 offset-2">Book Your Stay</h1>
+<br>
+
+<div class="row mt-3">
+    <div class="col-8 offset-2">
+        <!-- Display listing details -->
+        <div class="card mb-4">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="<%=listing.image.url%>" class="img-fluid rounded-start" alt="<%=listing.title%>">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><%=listing.title%></h5>
+                        <p class="card-text"><%=listing.description%></p>
+                        <p class="card-text"><strong>Location:</strong> <%=listing.location%>, <%=listing.country%></p>
+                        <p class="card-text"><strong>Base Price:</strong> &#8377;<%=listing.price.toLocaleString("en-IN")%> per night</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking Form -->
+        <form action="/booking/<%=listing._id%>" method="POST" class="needs-validation" novalidate>
+            <div class="mb-3">
+                <label for="customerName" class="form-label">Customer Name</label>
+                <input name="customerName" id="customerName" type="text" class="form-control" value="<%=currUser.username%>" required>
+                <div class="valid-feedback">Looks good!</div>
+                <div class="invalid-feedback">Please provide a valid customer name.</div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="checkInDate" class="form-label">Check-in Date</label>
+                    <input name="checkInDate" id="checkInDate" type="date" class="form-control" required>
+                    <div class="invalid-feedback">Please provide a valid check-in date.</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="checkOutDate" class="form-label">Check-out Date</label>
+                    <input name="checkOutDate" id="checkOutDate" type="date" class="form-control" required>
+                    <div class="invalid-feedback">Please provide a valid check-out date.</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="numberOfRooms" class="form-label">Number of Rooms</label>
+                    <input name="numberOfRooms" id="numberOfRooms" type="number" class="form-control" min="1" value="1" required>
+                    <div class="invalid-feedback">Please provide number of rooms (minimum 1).</div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="roomType" class="form-label">Room Type</label>
+                    <select name="roomType" id="roomType" class="form-control" required>
+                        <option value="">Select Room Type</option>
+                        <option value="NON AC">NON AC</option>
+                        <option value="AC">AC</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Executive">Executive</option>
+                        <option value="Presidential">Presidential</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a room type.</div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h6 class="card-title">Booking Summary</h6>
+                        <div id="bookingSummary">
+                            <p>Select dates and room details to see the total amount</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg">Book Now</button>
+            <a href="/listing/<%=listing._id%>" class="btn btn-secondary btn-lg">Cancel</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Room type multipliers
+    const roomMultipliers = {
+        'NON AC': 1.0,
+        'AC': 1.5,
+        'Premium': 2.0,
+        'Executive': 2.5,
+        'Presidential': 3.5
+    };
+
+    const basePrice = <%=listing.price%>;
+    
+    function calculateTotal() {
+        const checkIn = new Date(document.getElementById('checkInDate').value);
+        const checkOut = new Date(document.getElementById('checkOutDate').value);
+        const rooms = parseInt(document.getElementById('numberOfRooms').value) || 0;
+        const roomType = document.getElementById('roomType').value;
+
+        if (checkIn && checkOut && rooms > 0 && roomType && checkOut > checkIn) {
+            const timeDiff = checkOut.getTime() - checkIn.getTime();
+            const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            const multiplier = roomMultipliers[roomType] || 1;
+            const total = basePrice * days * rooms * multiplier;
+            
+            document.getElementById('bookingSummary').innerHTML = `
+                <p><strong>Number of Days:</strong> ${days}</p>
+                <p><strong>Number of Rooms:</strong> ${rooms}</p>
+                <p><strong>Room Type:</strong> ${roomType}</p>
+                <p><strong>Base Price per night:</strong> &#8377;${basePrice.toLocaleString("en-IN")}</p>
+                <p><strong>Price Multiplier:</strong> ${multiplier}x</p>
+                <hr>
+                <h6><strong>Total Amount: &#8377;${total.toLocaleString("en-IN")}</strong></h6>
+            `;
+        } else {
+            document.getElementById('bookingSummary').innerHTML = `
+                <p>Select dates and room details to see the total amount</p>
+            `;
+        }
+    }
+
+    // Add event listeners
+    document.getElementById('checkInDate').addEventListener('change', calculateTotal);
+    document.getElementById('checkOutDate').addEventListener('change', calculateTotal);
+    document.getElementById('numberOfRooms').addEventListener('input', calculateTotal);
+    document.getElementById('roomType').addEventListener('change', calculateTotal);
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('checkInDate').setAttribute('min', today);
+    document.getElementById('checkOutDate').setAttribute('min', today);
+
+    // Update check-out minimum date based on check-in
+    document.getElementById('checkInDate').addEventListener('change', function() {
+        const checkInDate = this.value;
+        if (checkInDate) {
+            const minCheckOut = new Date(checkInDate);
+            minCheckOut.setDate(minCheckOut.getDate() + 1);
+            document.getElementById('checkOutDate').setAttribute('min', minCheckOut.toISOString().split('T')[0]);
+        }
+    });
+</script>

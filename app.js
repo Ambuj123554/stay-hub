@@ -28,6 +28,7 @@ const listing=require("./routes/listing.js");
 
 const reviews=require("./routes/review.js");
 const user=require("./routes/user.js");
+const booking=require("./routes/booking.js");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
@@ -108,6 +109,7 @@ app.use("/listing",listing);
 
 app.use("/listing/:id/reviews",reviews);
 app.use("/",user);
+app.use("/booking",booking);
 // app.use("/",reviews);//parent router
 
 // app.get("/testlisting",async (req,res)=>{

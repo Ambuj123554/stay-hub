@@ -1,0 +1,94 @@
+<%layout("/layouts/boilerplate")%>
+<h1 class="col-6 offset-2">Admin Dashboard</h1>
+<br>
+
+<div class="row mt-3">
+    <div class="col-10 offset-1">
+        <div class="card">
+            <div class="card-header">
+                <h4>All Hotels and Bookings</h4>
+            </div>
+            <div class="card-body">
+                <%if(listings && listings.length > 0){%>
+                    <%listings.forEach((listing) => {%>
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5><%=listing.title%></h5>
+                                        <p><strong>Owner:</strong> <%=listing.owner.username%> (<%=listing.owner.email%>)</p>
+                                        <p><strong>Location:</strong> <%=listing.location%>, <%=listing.country%></p>
+                                        <p><strong>Price:</strong> &#8377;<%=listing.price.toLocaleString("en-IN")%> per night</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <%if(listing.image && listing.image.url){%>
+                                            <img src="<%=listing.image.url%>" alt="<%=listing.title%>" 
+                                                 style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+                                        <%}%>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h6>Current Bookings:</h6>
+                                <%if(listing.bookings && listing.bookings.length > 0){%>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Booking ID</th>
+                                                    <th>Customer</th>
+                                                    <th>Check-in</th>
+                                                    <th>Check-out</th>
+                                                    <th>Rooms</th>
+                                                    <th>Room Type</th>
+                                                    <th>Amount</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <%listing.bookings.forEach((booking) => {%>
+                                                    <tr>
+                                                        <td><small><%=booking._id.toString().slice(-8)%></small></td>
+                                                        <td>
+                                                            <%=booking.customerName%><br>
+                                                            <small class="text-muted"><%=booking.customer.email%></small>
+                                                        </td>
+                                                        <td><small><%=booking.checkInDate.toLocaleDateString("en-IN")%></small></td>
+                                                        <td><small><%=booking.checkOutDate.toLocaleDateString("en-IN")%></small></td>
+                                                        <td><%=booking.numberOfRooms%></td>
+                                                        <td><span class="badge bg-secondary"><%=booking.roomType%></span></td>
+                                                        <td>&#8377;<%=booking.totalAmount.toLocaleString("en-IN")%></td>
+                                                        <td>
+                                                            <%if(booking.status === 'Confirmed'){%>
+                                                                <span class="badge bg-success"><%=booking.status%></span>
+                                                            <%} else if(booking.status === 'Cancelled'){%>
+                                                                <span class="badge bg-danger"><%=booking.status%></span>
+                                                            <%} else {%>
+                                                                <span class="badge bg-info"><%=booking.status%></span>
+                                                            <%}%>
+                                                        </td>
+                                                    </tr>
+                                                <%})%>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <%} else {%>
+                                    <p class="text-muted">No bookings for this property yet.</p>
+                                <%}%>
+                            </div>
+                        </div>
+                    <%})%>
+                <%} else {%>
+                    <div class="alert alert-info">
+                        <h5>No Hotels Found</h5>
+                        <p>There are currently no hotels in the system.</p>
+                    </div>
+                <%}%>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <a href="/listing" class="btn btn-primary">Back to Listings</a>
+        </div>
+    </div>
+</div>

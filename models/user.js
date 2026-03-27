@@ -6,6 +6,12 @@ const userSchema=new Schema({
     email:{
         type:String,
         required:true,
+    },
+    accountType:{
+        type:String,
+        enum:["Customer","Owner","Admin"],
+        default:"Customer",
+        required:true,
     }
 });
 

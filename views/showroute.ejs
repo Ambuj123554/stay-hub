@@ -27,7 +27,13 @@
     </div>
     <br>
     <%if(currUser){%>
-        <%if(currUser._id.equals(list.owner._id)&&currUser){%>
+        <%if(currUser.accountType === 'Customer'){%>
+            <!-- Customer can only book -->
+            <div class="btns text-center">
+                <a href="/booking/<%=list._id%>" class="btn btn-success btn-lg">Book This Property</a>
+            </div>
+        <%} else if(currUser._id.equals(list.owner._id) && (currUser.accountType === 'Owner' || currUser.accountType === 'Admin')){%>
+            <!-- Owner can edit/delete -->
             <div class="btns">
                 <a href="/listing/<%=list._id%>/edit" class=" mb-3 btn btn-dark col-1 offset-3 edit-btn">Edit</a>
             
@@ -36,6 +42,12 @@
                 <form method="post" action="/listing/<%=list._id%>?_method=DELETE">
                     <button  class=" mb-3 btn btn-dark offset-5">Delete</button>
                 </form>
+            </div>
+        <%} else if(currUser.accountType === 'Owner'){%>
+            <!-- Other owners can't edit/delete but also can't book -->
+            <div class="alert alert-info text-center">
+                <p>As a property owner, you can only manage your own listings.</p>
+                <a href="/listing" class="btn btn-primary">Browse All Listings</a>
             </div>
         <%}%>
     <%}%>
@@ -46,7 +58,7 @@
         <hr>
         
         <%if(currUser){%>
-            
+            <%if(currUser.accountType === 'Customer'){%>
                 <h4>Leave a Review</h4>
                 <form class="mb-3" action="/listing/<%=list._id%>/reviews" method="post" >
                     
@@ -74,7 +86,11 @@
                     </div>
                     <button class="btn btn-outline-dark">Submit</button>
                 </form>
-            
+            <%} else if(currUser.accountType === 'Owner' || currUser.accountType === 'Admin'){%>
+                <div class="alert alert-info">
+                    <p><i class="fas fa-info-circle"></i> Only customers can leave reviews for properties.</p>
+                </div>
+            <%}%>
         <%}%>
         
 
@@ -93,7 +109,7 @@
                 </div>
 
                 <%if(currUser){%>
-                    <%if(currUser._id.equals(list.owner._id)&&currUser){%>
+                    <%if(currUser._id.equals(list.owner._id) || currUser.accountType === 'Admin'){%>
                         <form class="mb-4 mt-2" method="POST" action="/listing/<%=list._id%>/reviews/<%=review._id%>?method=DELETE">
                             <button class="btn btn-sm btn-dark">Delete</button>
                         </form>
